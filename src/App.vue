@@ -1,12 +1,15 @@
 <template>
   <div class="Todo">
+    {{  todos }}
     <div>
       <h1>To-do</h1>
-
       <AddItems @addItem="onAddItem" />
 
       <div v-for="(item, index) in todos">
-        <Item :item="item" />
+        <Item 
+          @update="onUpdate(index)"
+          @delete="onDelete(index)" 
+          :item="item" />
       </div>
     </div>
   </div>
@@ -25,6 +28,10 @@ export default {
   data() {
     return {
       todos: [],
+      newTask: "",
+      isEditing: false,
+      editTaskIndex: null,
+
     };
   },
 
@@ -33,6 +40,18 @@ export default {
       console.log(item);
       this.todos.push(item);
     },
+
+
+    onUpdate(value){
+      console.log(value)
+      this.isEditing = true
+      this.editTaskIndex = value
+    },
+
+    onDelete(index){
+      this.todos.splice(index, 1)
+    }
+
   },
 };
 </script>
