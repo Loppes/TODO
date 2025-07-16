@@ -6,7 +6,14 @@
       <AddItems @addItem="onAddItem" />
 
       <div v-for="(item, index) in todos">
-        <Item :item="item" />
+        <Item @editItem="onEditItem(index)" @deleteItem="onDeleteItem(index)" :item="item" />
+      </div>
+
+
+      <!--bloco de edicao-->
+      <div v-if="isEditing">
+        <input type="text" v-model="todos[editingIndex].title" />
+
       </div>
     </div>
   </div>
@@ -25,13 +32,21 @@ export default {
   data() {
     return {
       todos: [],
+      isEditing: false,
+      editingIndex: null,
     };
   },
 
   methods: {
     onAddItem(item) {
-      console.log(item);
       this.todos.push(item);
+    },
+    onEditItem(index) {
+      this.editingIndex = index;
+      this.isEditing = true;
+    },
+    onDeleteItem(index) {
+      this.todos.splice(index, 1);
     },
   },
 };

@@ -2,11 +2,14 @@
   <div class="item">
     <input type="checkbox" v-model="item.status" />
     <div>
-      <h1 class="label-title" :class="through">
+      <h1 v-if="!isEditing" class="label-title" :class="through">
         {{ item.title }}
       </h1>
+      <input type="text" v-model="item.title" v-if="isEditing" />
     </div>
-    <!-- <button @click="clickDeleteButton(index)">Excluir</button> -->
+    <button v-if="!isEditing" @click="clickEditButton(index)">✏️</button>
+    <button v-if="isEditing" @click="clickSaveButton(index)">💾</button>
+    <button @click="clickDeleteButton(index)">❌</button>
   </div>
 </template>
 
@@ -14,17 +17,39 @@
 export default {
   name: "Item",
 
+  data() {
+    return {
+      isEditing: false,
+    };
+  },
+
   computed: {
     through() {
       return this.item.status ? "through" : "";
     },
   },
 
+  emits: ["editItem"],
+
   props: {
     item: Object,
+    modelValue: Object,
   },
 
   methods: {
+    clickEditButton(index) {
+      this.$emit("editItem");
+      this.isEditing = true;
+    },
+
+    clickDeleteButton(index) {
+      this.$emit("deleteItem", this.item);
+    },
+
+    clickSaveButton(index) {
+      this.isEditing = false;
+    },
+
     // clickDeleteButton(index) {
     //   console.log("Excluir Tarefa");
     //   let task = this.todos[index];
