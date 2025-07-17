@@ -1,19 +1,12 @@
 <template>
-  <div class="Todo">
+  <div class="">
     <div>
-      <h1>To-do</h1>
+      <div class="text-2xl font-bold justify-self-center p-4 font-medium">To-do List</div>
 
       <AddItems @addItem="onAddItem" />
 
       <div v-for="(item, index) in todos">
         <Item @editItem="onEditItem(index)" @deleteItem="onDeleteItem(index)" :item="item" />
-      </div>
-
-
-      <!--bloco de edicao-->
-      <div v-if="isEditing">
-        <input type="text" v-model="todos[editingIndex].title" />
-
       </div>
     </div>
   </div>
@@ -32,8 +25,6 @@ export default {
   data() {
     return {
       todos: [],
-      isEditing: false,
-      editingIndex: null,
     };
   },
 
@@ -46,12 +37,14 @@ export default {
       this.isEditing = true;
     },
     onDeleteItem(index) {
-      this.todos.splice(index, 1);
+      if (confirm("Tem certeza que deseja excluir este item?")) {
+        this.todos.splice(index, 1);
+      }
     },
   },
 };
 </script>
-
+<!-- 
 <style scoped>
 h1 {
   text-align: center;
@@ -62,4 +55,4 @@ h1 {
   display: flex;
   margin: 30% 30%;
 }
-</style>
+</style> -->

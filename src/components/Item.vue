@@ -1,22 +1,32 @@
 <template>
-  <div class="item">
-    <input type="checkbox" v-model="item.status" />
-    <div>
-      <h1 v-if="!isEditing" class="label-title" :class="through">
-        {{ item.title }}
-      </h1>
-      <input type="text" v-model="item.title" v-if="isEditing" />
+  <div class="shadow-md mb-4 p-4 m-4 rounded-lg flex justify-between border-gray-100 border-2 transition duration-300 hover:shadow-lg" :class="through">
+    <div class="flex items-center" :class="throughText">
+        <input class="mr-4 cursor-pointer w-6 h-6 border-gray-300 rounded-md border-2 checked:bg-sky-300 transition duration-400 " type="checkbox" v-model="item.status" />
+      <div>
+        <div v-if="!isEditing" class="font-medium" >
+          {{ item.title }}
+        </div>
+        <input type="text" v-model="item.title" v-if="isEditing" class="input-text" />
+      </div>
     </div>
-    <button v-if="!isEditing" @click="clickEditButton(index)">✏️</button>
-    <button v-if="isEditing" @click="clickSaveButton(index)">💾</button>
-    <button @click="clickDeleteButton(index)">❌</button>
+    
+    <div class="flex justify-end">
+      <CustomButton class="mr-3" :disabled="item.status" v-if="!isEditing"  @click="clickEditButton(index)" icon="mdi:pencil">Editar</CustomButton>
+      <CustomButton class="mr-3" v-if="isEditing" @click="clickSaveButton(index)" icon="mdi:content-save">Salvar</CustomButton>
+      <CustomButton class="mr-3" @click="clickDeleteButton(index)" icon="mdi:delete">Excluir</CustomButton>
+    </div>
+    
   </div>
 </template>
 
 <script>
+import CustomButton from './CustomButton.vue'
+
 export default {
   name: "Item",
-
+  components: {
+    CustomButton,
+  },
   data() {
     return {
       isEditing: false,
@@ -25,8 +35,11 @@ export default {
 
   computed: {
     through() {
-      return this.item.status ? "through" : "";
+      return this.item.status ? "bg-gray-200 border-gray-200 text-gray-500" : "";
     },
+    throughText() {
+      return this.item.status ? "line-through" : "";
+    }
   },
 
   emits: ["editItem"],
@@ -61,14 +74,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.through {
-  text-decoration: line-through;
-}
-</style>
