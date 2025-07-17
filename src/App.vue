@@ -44,15 +44,3 @@ export default {
   },
 };
 </script>
-<!-- 
-<style scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.Todo {
-  display: flex;
-  margin: 30% 30%;
-}
-</style> -->
