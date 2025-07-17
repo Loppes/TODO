@@ -1,5 +1,42 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+button {
+ @apply 
+      bg-sky-100 
+      justify-self-center 
+      px-4 py-2 
+      rounded-lg 
+      shadow-md 
+      text-sky-950
+      cursor-pointer
+      hover:bg-sky-300 
+      transition-all transition-discrete;
+
+}
+
+button:disabled {
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed
+}
+
+.input {
+  @apply 
+      border-sky-200 
+      border 
+      rounded-md
+      shadow-sm
+      px-2
+      text-xl
+      w-full
+      transition duration-200
+      focus:outline-none
+      focus:ring-2
+      focus:border-sky-500
+      focus:ring-sky-500
+
+}
+
+
+/* 
 #app {
   width: 100vh;
   height: 100vh;
@@ -58,4 +95,4 @@ input:active {
 
 input:focus {
   border: 2px solid grey;
-}
+} */

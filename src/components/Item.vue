@@ -1,21 +1,50 @@
 <template>
-  <div class="item">
-    <input type="checkbox" v-model="item.status" />
-    <div>
-      <h1 v-if="!isEditing" class="label-title" :class="through">
-        {{ item.title }}
-      </h1>
-      <input v-else v-model="item.title" />
+  <div class="shadow mb-4 p-4 m-4 rounded" :class="through">
+    <div class="flex mb-4">
+      <input
+        class="mr-4 cursor-pointer"
+        type="checkbox"
+        v-model="item.status"
+      />
+      <div class="">
+        <div v-if="!isEditing" class="font-medium" :class="throughTitle">
+          {{ item.title }}
+        </div>
+        <input class="input" v-else v-model="item.title" />
+      </div>
     </div>
-    <button v-if="isEditing" @click="clickSaveButton">Salvar</button>
-    <button v-else @click="clickUpdateButton(index)">Update</button>
-    <button @click="clickDeleteButton(index)">Delete</button>
-    <!-- <button @click="clickDeleteButton(index)">Excluir</button> -->
+
+    <div class="flex">
+      <custom-button  icon="mdi:content-save" class="mr-3" v-if="isEditing" @click="clickSaveButton">
+        Salvar
+      </custom-button>
+
+      <custom-button
+        :disabled="throughButton"
+        class="mr-3"
+        v-else
+        icon="mdi:edit"
+        @click="clickUpdateButton(index)"
+      >
+        Update
+      </custom-button>
+
+      <custom-button
+      :disabled="throughButton"
+      @click="clickDeleteButton(index)" icon="mdi:trash"
+        >Delete</custom-button
+      >
+    </div>
   </div>
 </template>
 
 <script>
+import customButton from "./CustomButton.vue";
+
 export default {
+  components: {
+    customButton,
+  },
   name: "Item",
 
   data() {
@@ -26,8 +55,15 @@ export default {
 
   computed: {
     through() {
-      return this.item.status ? "through" : "";
+      return this.item.status ? "bg-gray-100 text-gray-400" : "";
     },
+    throughTitle() {
+      return this.item.status ? "line-through" : "";
+    },
+    throughButton() {
+      return this.item.status
+    }
+
   },
 
   emits: ["update"],
@@ -60,19 +96,4 @@ export default {
 };
 </script>
 
-<style scoped>
-button {
-  border: 1px;
-  border-style: solid;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.through {
-  text-decoration: line-through;
-}
-</style>
+<style scoped></style>

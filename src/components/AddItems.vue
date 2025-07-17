@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="form">
-      <label>Título:</label>
-      <input v-model="title" type="text" class="todo-form" />
+    <div class="form mb-4 justify-self-center">
+      <div class="">Título</div>
+      <input v-model="title" type="text" class="input" />
     </div>
 
-    <customButton @click="clickAddButton">Adicionar</customButton>
+    <customButton icon="mdi:plus" @click="clickAddButton">Adicionar</customButton>
   </div>
 </template>
 
@@ -53,8 +53,5 @@ export default {
 </script>
 
 <style>
-.form {
-  display: flex;
-  margin-bottom: 10px;
-}
+
 </style>

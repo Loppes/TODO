@@ -1,8 +1,12 @@
 <template>
-  <div class="Todo">
-    {{  todos }}
+  <div class="">
     <div>
-      <h1>To-do</h1>
+      <div class="
+      text-2xl 
+      justify-self-center
+      p-4
+      font-bold
+      ">To-do List</div>
       <AddItems @addItem="onAddItem" />
 
       <div v-for="(item, index) in todos">
@@ -11,6 +15,8 @@
           @delete="onDelete(index)" 
           :item="item" />
       </div>
+
+      
     </div>
   </div>
 </template>
@@ -56,14 +62,6 @@ export default {
 };
 </script>
 
-<style scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+<style>
 
-.Todo {
-  display: flex;
-  margin: 30% 30%;
-}
 </style>
