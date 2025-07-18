@@ -25,6 +25,12 @@ export default {
 
   emits: ["addItem"],
 
+  watch: {
+    title() {
+      localStorage.setItem("title", this.title);
+    },
+  },
+
   methods: {
     clickAddButton() {
       if (this.title == "") {
@@ -48,7 +54,9 @@ export default {
 
   props: {},
 
-  mounted() {},
+  mounted() {
+    this.title = localStorage.getItem("title") || ""
+  },
 };
 </script>
 

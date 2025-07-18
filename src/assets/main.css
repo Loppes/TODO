@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+.router-link-exact-active{
+  @apply bg-sky-600 text-white px-2 rounded scale-105 transition;
+}
+
 button {
  @apply 
       bg-sky-100 

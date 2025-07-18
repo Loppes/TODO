@@ -24,14 +24,14 @@
         class="mr-3"
         v-else
         icon="mdi:edit"
-        @click="clickUpdateButton(index)"
+        @click="clickUpdateButton()"
       >
         Update
       </custom-button>
 
       <custom-button
       :disabled="throughButton"
-      @click="clickDeleteButton(index)" icon="mdi:trash"
+      @mouseup="clickDeleteButton" icon="mdi:trash"
         >Delete</custom-button
       >
     </div>
@@ -63,35 +63,25 @@ export default {
     throughButton() {
       return this.item.status
     }
-
   },
 
-  emits: ["update"],
+  emits: ["update", "delete"],
 
   props: {
     item: Object,
   },
 
   methods: {
-    clickUpdateButton(index) {
+    clickUpdateButton() {
       this.$emit("update");
       this.isEditing = true;
     },
-    clickDeleteButton(index) {
+    clickDeleteButton() {
       this.$emit("delete");
     },
-
-    clickSaveButton(index) {
+    clickSaveButton() {
       this.isEditing = false;
     },
-
-    // clickDeleteButton(index) {
-    //   console.log("Excluir Tarefa");
-    //   let task = this.todos[index];
-    //   if (confirm("Deseja Excluir a tarefa: " + task.title)) {
-    //     this.todos.splice(index, 1);
-    //   }
-    // },
   },
 };
 </script>
