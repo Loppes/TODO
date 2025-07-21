@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="">
+
     <div class="form mb-4 justify-self-center">
       <div class="">Título</div>
       <input v-model="title" type="text" class="input" />
@@ -11,6 +12,8 @@
 
 <script>
 import customButton from "./CustomButton.vue";
+import { mapState, mapMutations } from 'vuex'
+
 
 export default {
   components: {
@@ -54,8 +57,13 @@ export default {
 
   props: {},
 
+  computed: {
+    ...mapState(['store_todos'])
+  },
+
   mounted() {
     this.title = localStorage.getItem("title") || ""
+    console.log(mapState(['state_todos']))
   },
 };
 </script>

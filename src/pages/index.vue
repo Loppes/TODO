@@ -3,7 +3,6 @@
     <div>
       <div class="text-2xl justify-self-center p-4 font-bold">To-do List</div>
       <AddItems @addItem="onAddItem" />
-
       <TransitionGroup name="list" tag="ul">
         <div v-for="(item, index) in todos" :key="item">
           <Item @update="onUpdate(index)" @delete="onDelete(index)" :item="item" />
@@ -16,6 +15,9 @@
 <script>
 import Item from "@/components/Item.vue";
 import AddItems from "@/components/AddItems.vue";
+
+import { mapState, mapMutations } from 'vuex'
+
 
 export default {
   components: {
@@ -41,8 +43,16 @@ export default {
   },
 
   methods: {
+    ...mapMutations([
+      'toggleDone',
+     'deleteTodo', 
+     'setTodos', 
+     'addTodo' 
+    ]),
+
     onAddItem(item) {
       this.todos.push(item);
+      this.addTodo(item)
     },
 
     onUpdate(value) {
@@ -57,7 +67,12 @@ export default {
 
   mounted() {
     this.todos = JSON.parse(localStorage.getItem("todos")) || [];
+    this.setTodos(this.todos);
   },
+
+  computed: {
+    ...mapState(['store_todos'])
+  }
 };
 </script>
 
