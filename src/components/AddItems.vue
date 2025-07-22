@@ -12,8 +12,6 @@
 
 <script>
 import customButton from "./CustomButton.vue";
-import { mapState, mapMutations } from 'vuex'
-
 
 export default {
   components: {
@@ -53,12 +51,6 @@ export default {
       this.title = "";
       this.description = "";
     },
-  },
-
-  props: {},
-
-  computed: {
-    ...mapState(['store_todos'])
   },
 
   mounted() {

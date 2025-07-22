@@ -21,7 +21,8 @@
 import Item from "@/components/Item.vue";
 import AddItems from "@/components/AddItems.vue";
 
-import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import { useTodoStore } from "@/stores/todos";
+import { storeToRefs } from 'pinia'
 
 import api from "@/api";
 
@@ -37,6 +38,17 @@ export default {
     };
   },
 
+  computed: {
+    storeTodos(){
+      const store = useTodoStore();
+      return store
+    },
+
+    reversedTodos(){
+      return this.storeTodos.reversedTodos
+    }
+  },
+
   watch: {
     todos: {
       handler(value) {
@@ -47,30 +59,20 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["toggleDone", "deleteTodo", "setTodos", "addTodo"]),
-    ...mapActions(['createTodo', 'fetchTodos', 'deleteTodo']),
-
-
     onAddItem(item) {
-      this.createTodo(item);
+      this.storeTodos.createTodo(item);
     },
 
-    onUpdate(value) {
-    },
+    onUpdate(value) {},
 
     onDelete(item) {
-      this.deleteTodo(item.id)
+      this.storeTodos.deleteTodo(item.id);
     },
   },
 
   mounted() {
     this.isLoading = true;
-    this.fetchTodos().finally(() => (this.isLoading = false));
-  },
-
-  computed: {
-    ...mapState(["store_todos"]),
-    ...mapGetters(['reversedTodos'])
+    this.storeTodos.fetchTodos().finally(() => (this.isLoading = false));
   },
 };
 </script>

@@ -1,11 +1,7 @@
 <template>
   <div class="shadow mb-4 p-4 m-4 rounded" :class="through">
     <div class="flex mb-4">
-      <input
-        class="mr-4 cursor-pointer"
-        type="checkbox"
-        v-model="item.status"
-      />
+      <input class="mr-4 cursor-pointer" type="checkbox" v-model="item.status" />
       <div class="">
         <div v-if="!isEditing" class="font-medium" :class="throughTitle">
           {{ item.title }}
@@ -15,7 +11,12 @@
     </div>
 
     <div class="flex">
-      <custom-button  icon="mdi:content-save" class="mr-3" v-if="isEditing" @click="clickSaveButton">
+      <custom-button
+        icon="mdi:content-save"
+        class="mr-3"
+        v-if="isEditing"
+        @click="clickSaveButton"
+      >
         Salvar
       </custom-button>
 
@@ -29,18 +30,14 @@
         Update
       </custom-button>
 
-      <custom-button
-      @mouseup="clickDeleteButton" icon="mdi:trash"
-        >Delete</custom-button
-      >
+      <custom-button @mouseup="clickDeleteButton" icon="mdi:trash">Delete</custom-button>
     </div>
   </div>
 </template>
 
 <script>
 import customButton from "./CustomButton.vue";
-
-import { mapActions } from 'vuex';
+import { useTodoStore } from "@/stores/todos";
 
 export default {
   components: {
@@ -62,8 +59,8 @@ export default {
       return this.item.status ? "line-through" : "";
     },
     throughButton() {
-      return this.item.status
-    }
+      return this.item.status;
+    },
   },
 
   emits: ["update", "delete"],
@@ -73,8 +70,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(['updateTodo']),
-
     clickUpdateButton() {
       this.$emit("update");
       this.isEditing = true;
@@ -83,9 +78,8 @@ export default {
       this.$emit("delete");
     },
     clickSaveButton() {
-      this.updateTodo(this.item)
-        .catch(r => console.log(r))
-      
+      const store = useTodoStore();
+      store.updateTodo(this.item).catch((r) => console.log(r));
       this.isEditing = false;
     },
   },
