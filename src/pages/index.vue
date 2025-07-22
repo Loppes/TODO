@@ -3,9 +3,14 @@
     <div>
       <div class="text-2xl justify-self-center p-4 font-bold">To-do List</div>
       <AddItems @addItem="onAddItem" />
+      <div v-if="isLoading" class="p-8 font-bold">Carregando...</div>
       <TransitionGroup name="list" tag="ul">
-        <div v-for="(item, index) in todos" :key="item">
-          <Item @update="onUpdate(index)" @delete="onDelete(index)" :item="item" />
+        <div v-for="(item, index) in reversedTodos" :key="item.id">
+          <Item
+            @update="onUpdate(index)"
+            @delete="onDelete(item)"
+            :item="item"
+          />
         </div>
       </TransitionGroup>
     </div>
@@ -16,8 +21,9 @@
 import Item from "@/components/Item.vue";
 import AddItems from "@/components/AddItems.vue";
 
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 
+import api from "@/api";
 
 export default {
   components: {
@@ -27,9 +33,7 @@ export default {
 
   data() {
     return {
-      todos: [],
-      isEditing: false,
-      editTaskIndex: null,
+      isLoading: false,
     };
   },
 
@@ -43,36 +47,31 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
-      'toggleDone',
-     'deleteTodo', 
-     'setTodos', 
-     'addTodo' 
-    ]),
+    ...mapMutations(["toggleDone", "deleteTodo", "setTodos", "addTodo"]),
+    ...mapActions(['createTodo', 'fetchTodos', 'deleteTodo']),
+
 
     onAddItem(item) {
-      this.todos.push(item);
-      this.addTodo(item)
+      this.createTodo(item);
     },
 
     onUpdate(value) {
-      this.isEditing = true;
-      this.editTaskIndex = value;
     },
 
-    onDelete(index) {
-      this.todos.splice(index, 1);
+    onDelete(item) {
+      this.deleteTodo(item.id)
     },
   },
 
   mounted() {
-    this.todos = JSON.parse(localStorage.getItem("todos")) || [];
-    this.setTodos(this.todos);
+    this.isLoading = true;
+    this.fetchTodos().finally(() => (this.isLoading = false));
   },
 
   computed: {
-    ...mapState(['store_todos'])
-  }
+    ...mapState(["store_todos"]),
+    ...mapGetters(['reversedTodos'])
+  },
 };
 </script>
 

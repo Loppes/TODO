@@ -63,7 +63,6 @@ export default {
 
   mounted() {
     this.title = localStorage.getItem("title") || ""
-    console.log(mapState(['state_todos']))
   },
 };
 </script>

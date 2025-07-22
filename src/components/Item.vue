@@ -30,7 +30,6 @@
       </custom-button>
 
       <custom-button
-      :disabled="throughButton"
       @mouseup="clickDeleteButton" icon="mdi:trash"
         >Delete</custom-button
       >
@@ -40,6 +39,8 @@
 
 <script>
 import customButton from "./CustomButton.vue";
+
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -72,6 +73,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['updateTodo']),
+
     clickUpdateButton() {
       this.$emit("update");
       this.isEditing = true;
@@ -80,6 +83,9 @@ export default {
       this.$emit("delete");
     },
     clickSaveButton() {
+      this.updateTodo(this.item)
+        .catch(r => console.log(r))
+      
       this.isEditing = false;
     },
   },
