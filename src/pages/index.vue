@@ -4,14 +4,14 @@
       <div class="text-2xl justify-self-center p-4 font-bold">To-do List</div>
       <AddItems @addItem="onAddItem" />
       <div v-if="isLoading" class="p-8 font-bold">Carregando...</div>
-      <TransitionGroup name="list" tag="ul">
-        <div v-for="(item, index) in reversedTodos" :key="item.id">
+      <TransitionGroup name="list" tag="ul" id="items" ref="sortableList">
+        <li class="cursor-move" v-for="(item, index) in indexedTodos" :key="item.id">
           <Item
             @update="onUpdate(index)"
             @delete="onDelete(item)"
             :item="item"
           />
-        </div>
+        </li>
       </TransitionGroup>
     </div>
   </div>
@@ -20,11 +20,10 @@
 <script>
 import Item from "@/components/Item.vue";
 import AddItems from "@/components/AddItems.vue";
-
 import { useTodoStore } from "@/stores/todos";
-import { storeToRefs } from 'pinia'
-
 import api from "@/api";
+
+import Sortable from 'sortablejs';
 
 export default {
   components: {
@@ -44,18 +43,9 @@ export default {
       return store
     },
 
-    reversedTodos(){
-      return this.storeTodos.reversedTodos
+    indexedTodos(){
+      return this.storeTodos.indexedTodos
     }
-  },
-
-  watch: {
-    todos: {
-      handler(value) {
-        localStorage.setItem("todos", JSON.stringify(value));
-      },
-      deep: true,
-    },
   },
 
   methods: {
@@ -63,7 +53,9 @@ export default {
       this.storeTodos.createTodo(item);
     },
 
-    onUpdate(value) {},
+    onUpdate(newIndex, oldIndex) {
+      this.storeTodos.switchTodoItems(newIndex, oldIndex)
+    },
 
     onDelete(item) {
       this.storeTodos.deleteTodo(item.id);
@@ -71,6 +63,13 @@ export default {
   },
 
   mounted() {
+    var el = document.getElementById('items');
+    var sortable = Sortable.create(el, {
+      onUpdate:(value) => {
+        this.onUpdate(value.newIndex, value.oldIndex)
+      }
+    });
+
     this.isLoading = true;
     this.storeTodos.fetchTodos().finally(() => (this.isLoading = false));
   },

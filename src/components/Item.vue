@@ -1,12 +1,12 @@
 <template>
-  <div class="shadow mb-4 p-4 m-4 rounded" :class="through">
+  <div class="select-none shadow mb-4 p-4 m-4 rounded bg-gray-200" :class="through">
     <div class="flex mb-4">
       <input class="mr-4 cursor-pointer" type="checkbox" v-model="item.status" />
       <div class="">
-        <div v-if="!isEditing" class="font-medium" :class="throughTitle">
+        <div v-show="!isEditing" class="font-medium" :class="throughTitle">
           {{ item.title }}
         </div>
-        <input class="input" v-else v-model="item.title" />
+        <input class="input" v-show="isEditing" v-model="item.title" />
       </div>
     </div>
 
@@ -14,7 +14,7 @@
       <custom-button
         icon="mdi:content-save"
         class="mr-3"
-        v-if="isEditing"
+        v-show="isEditing"
         @click="clickSaveButton"
       >
         Salvar
@@ -23,7 +23,7 @@
       <custom-button
         :disabled="throughButton"
         class="mr-3"
-        v-else
+        v-show="!isEditing"
         icon="mdi:edit"
         @click="clickUpdateButton()"
       >
@@ -79,7 +79,7 @@ export default {
     },
     clickSaveButton() {
       const store = useTodoStore();
-      store.updateTodo(this.item).catch((r) => console.log(r));
+      store.updateTodo(this.item)
       this.isEditing = false;
     },
   },

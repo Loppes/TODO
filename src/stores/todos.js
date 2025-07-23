@@ -18,6 +18,7 @@ export const useTodoStore = defineStore( 'todo', {
 
     async createTodo(todo) {
       try {
+        todo.index = this.store_todos.length;
         const response = await api.post("todos", todo);
         this.store_todos.push(response.data)
       } catch (err) {
@@ -34,7 +35,7 @@ export const useTodoStore = defineStore( 'todo', {
       }
     },
 
-    async updateTodo( todo) {
+    async updateTodo(todo) {
       try {
         const response = await api.put(`todos/${todo.id}`, todo);
         let index = this.store_todos.findIndex(t => t.id === response.id);
@@ -43,9 +44,25 @@ export const useTodoStore = defineStore( 'todo', {
         console.error("Erro ao atualizar todo: ", err);
       }
     },
+
+    async switchTodoItems(newIndex, oldIndex) {
+      try {
+        let todo = this.store_todos.find(t => t.index === oldIndex);
+        let todo2 = this.store_todos.find(t => t.index === newIndex);
+        
+        todo.index = newIndex
+        todo2.index = oldIndex
+        await api.put(`todos/${todo.id}`, todo);
+        await api.put(`todos/${todo2.id}`, todo2);
+      }
+      catch(err) {
+        console.error("Erro ao atualizar todo: ", err);
+      }
+    }
   },
 
   getters: {
+    indexedTodos: (state) => [...state.store_todos].sort((a, b) => a.index - b.index),
     reversedTodos: (state) => [...state.store_todos].reverse()
   },
 });
