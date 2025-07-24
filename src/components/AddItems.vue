@@ -2,11 +2,10 @@
   <div class="">
 
     <div class="form mb-4 justify-self-center">
-      <div class="">Título</div>
-      <input v-model="title" type="text" class="input" />
+      <input v-model="title" placeholder="Titulo" type="text" class="input" />
     </div>
 
-    <customButton icon="mdi:plus" @click="clickAddButton">Adicionar</customButton>
+    <customButton color="sky" icon="mdi:plus" @click="clickAddButton">Adicionar</customButton>
   </div>
 </template>
 
@@ -42,6 +41,8 @@ export default {
         title: this.title,
         description: this.description,
         status: false,
+        priority: 0,
+        updated: new Date(),
       });
 
       this.clearInputs();

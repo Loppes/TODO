@@ -1,8 +1,10 @@
 <template>
   <div class="">
     <div>
-      <div class="text-2xl justify-self-center p-4 font-bold">To-do List</div>
-      <AddItems @addItem="onAddItem" />
+      <div class="text-2xl justify-self-center p-4 font-bold">To-Do List</div>
+      <AddItems class="mb-4" @addItem="onAddItem" />
+      <Filter />
+
       <div v-if="isLoading" class="p-8 font-bold">Carregando...</div>
       <TransitionGroup name="list" tag="ul" id="items" ref="sortableList">
         <li class="cursor-move" v-for="(item, index) in indexedTodos" :key="item.id">
@@ -20,8 +22,8 @@
 <script>
 import Item from "@/components/Item.vue";
 import AddItems from "@/components/AddItems.vue";
+import Filter from "@/components/Filter.vue";
 import { useTodoStore } from "@/stores/todos";
-import api from "@/api";
 
 import Sortable from 'sortablejs';
 
@@ -29,6 +31,7 @@ export default {
   components: {
     Item,
     AddItems,
+    Filter
   },
 
   data() {
@@ -53,8 +56,9 @@ export default {
       this.storeTodos.createTodo(item);
     },
 
-    onUpdate(newIndex, oldIndex) {
-      this.storeTodos.switchTodoItems(newIndex, oldIndex)
+    onUpdate(item) {
+      item.updated = new Date()
+      this.storeTodos.updateTodo(item)
     },
 
     onDelete(item) {
@@ -65,8 +69,11 @@ export default {
   mounted() {
     var el = document.getElementById('items');
     var sortable = Sortable.create(el, {
+
       onUpdate:(value) => {
-        this.onUpdate(value.newIndex, value.oldIndex)
+        let item = this.indexedTodos[value.oldIndex];
+        item.index = value.newIndex;
+        this.onUpdate(item)
       }
     });
 
