@@ -1,45 +1,32 @@
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between px-10">
     <div class="w-1/4">
       <input class="input" placeholder="Pesquisa" v-model="titleSearch" />
     </div>
 
-    <!-- <select v-model="statusSearch" class="px-2">
-      <option v-for="item in statusEnum" :value="item.key">
-        {{ item.value }}
-      </option>
-    </select> -->
-
-    <div class="px-2 flex">
-      <div class="pr-2" v-for="(item, index) in statusEnum">
+    <div class="gap-5 px-2 flex">
+      <div v-for="(item, index) in statusEnum">
         <input
-          type="radio"
+          type="checkbox"
           :id="`radio${index}`"
           v-model="statusSearch"
           :value="item.key"
-        />
-        <label for="`radio${index}`">{{ item.value }}</label>
+          >
+            <label :for="`radio${index}`">{{ item.value }}</label>
+        </input>
       </div>
     </div>
 
-    <div class="px-2 flex">
-      <div class="pr-2">
+    <div class="gap-5 px-2 flex">
+      <div v-for="(item, index) in priorityEnum">
         <input
-          type="radio"
-          id="radioPriority999"
-          v-model="prioritySearch"
-          :value="null"
-        />
-        <label for="radioPriority999">Todos</label>
-      </div>
-      <div class="pr-2" v-for="(item, index) in priorityEnum">
-        <input
-          type="radio"
+          type="checkbox"
           :id="`radioPriority${index}`"
           v-model="prioritySearch"
           :value="item.key"
-        />
-        <label :for="`radioPriority${index}`">{{ item.value }}</label>
+        >
+          <label :for="`radioPriority${index}`">{{ item.value }}</label>
+        </input>
       </div>
     </div>
   </div>
@@ -47,27 +34,16 @@
 
 <script>
 import { useTodoStore } from "@/stores/todos";
+import {PRIORITY_ENUM, STATUS_ENUM} from "@/enums.js"
 
-const STATUS_ENUM = {
-  ALL: 0,
-  NOT_DONE: 1,
-  DONE: 2,
-};
-
-const PRIORITY_ENUM = {
-  LOW: 0,
-  MEDIUM: 1,
-  HIGH: 2,
-};
 
 export default {
   data() {
     return {
-      statusSearch: 0,
-      prioritySearch: null,
+      statusSearch: [1,2],
+      prioritySearch: [],
       titleSearch: "",
       statusEnum: [
-        { key: STATUS_ENUM.ALL, value: "Todos" },
         { key: STATUS_ENUM.NOT_DONE, value: "Nao Realizados" },
         { key: STATUS_ENUM.DONE, value: "Realizados" },
       ],
@@ -81,27 +57,19 @@ export default {
   },
 
   watch: {
+    titleSearch(value) {
+      localStorage.setItem("titleSearch", JSON.stringify(value));
+      this.storeTodos.setTitleSearch(value);
+    },
+
     statusSearch(value) {
-      switch (value) {
-        case STATUS_ENUM.ALL:
-          this.storeTodos.setStatusSearch(null);
-          break;
-        case STATUS_ENUM.NOT_DONE:
-          this.storeTodos.setStatusSearch(false);
-          break;
-        case STATUS_ENUM.DONE:
-          this.storeTodos.setStatusSearch(true);
-          break;
-      }
+      localStorage.setItem("statusSearch", JSON.stringify(value));
+      this.storeTodos.setStatusSearch(value);
     },
 
     prioritySearch(value) {
-      console.log(value);
+      localStorage.setItem("prioritySearch", JSON.stringify(value));
       this.storeTodos.setPrioritySearch(value);
-    },
-
-    titleSearch(value) {
-      this.storeTodos.setTitleSearch(value);
     },
   },
 
@@ -112,10 +80,10 @@ export default {
     },
   },
 
-  methods: {
-    updateTitleSearch(value) {
-      this.storeTodos.setTitleSearch(value);
-    },
-  },
+  mounted(){
+      this.statusSearch = JSON.parse(localStorage.getItem("statusSearch")) || [];
+      this.prioritySearch = JSON.parse(localStorage.getItem("prioritySearch")) || []
+      this.titleSearch = JSON.parse(localStorage.getItem("titleSearch")) || ""
+  }
 };
 </script>

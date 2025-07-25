@@ -27,6 +27,7 @@ export default {
     disabled: Boolean,
     color: {type: String, default: 'sky'},
   },
+
   methods: {
     clickButton() {
       if (!this.disabled) {
@@ -39,16 +40,10 @@ export default {
     }
   },
 
-  //sky
-  //red
-  //blue
-  //gray
-
-
   computed: {
     buttonClass(){
       return COLORS[this.color] //`bg-${this.color}-100 text-${this.color}-950 hover:bg-${this.color}-200`
-    }
+    },
   }
 };
 </script>

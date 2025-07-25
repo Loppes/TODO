@@ -7,9 +7,9 @@
 
       <div v-if="isLoading" class="p-8 font-bold">Carregando...</div>
       <TransitionGroup name="list" tag="ul" id="items" ref="sortableList">
-        <li class="cursor-move" v-for="(item, index) in indexedTodos" :key="item.id">
+        <li class="cursor-move" v-for="(item, index) in filteredTodos" :key="item.id">
           <Item
-            @update="onUpdate(index)"
+            @update="onUpdate(item)"
             @delete="onDelete(item)"
             :item="item"
           />
@@ -48,6 +48,10 @@ export default {
 
     indexedTodos(){
       return this.storeTodos.indexedTodos
+    },
+
+    filteredTodos(){
+      return this.storeTodos.filteredTodos
     }
   },
 
@@ -57,7 +61,6 @@ export default {
     },
 
     onUpdate(item) {
-      item.updated = new Date()
       this.storeTodos.updateTodo(item)
     },
 
@@ -69,7 +72,6 @@ export default {
   mounted() {
     var el = document.getElementById('items');
     var sortable = Sortable.create(el, {
-
       onUpdate:(value) => {
         let item = this.indexedTodos[value.oldIndex];
         item.index = value.newIndex;

@@ -40,7 +40,7 @@ export default {
       this.$emit("addItem", {
         title: this.title,
         description: this.description,
-        status: false,
+        status: 1,
         priority: 0,
         updated: new Date(),
       });

@@ -8,7 +8,7 @@
         @change="handleInputChange"
         class="mr-4 cursor-pointer"
         type="checkbox"
-        v-model="item.status"
+        v-model="actualStatus"
       />
       <div class="">
         <div v-show="!isEditing" class="font-medium" :class="throughTitle">
@@ -30,7 +30,7 @@
         </custom-button>
 
         <custom-button
-          :disabled="throughButton"
+          :disabled="actualStatus"
           class="mr-3"
           v-show="!isEditing"
           icon="mdi:edit"
@@ -44,7 +44,7 @@
         >
       </div>
 
-      <div class="flex">
+      <div class="flex" v-if="!actualStatus">
         <custom-button
           v-for="(item, index) in priorityEnum"
           :icon="`mdi:signal-cellular-${index + 1}`"
@@ -62,11 +62,7 @@
 <script>
 import customButton from "./CustomButton.vue";
 import { useTodoStore } from "@/stores/todos";
-const PRIORITY_ENUM = {
-  LOW: 0,
-  MEDIUM: 1,
-  HIGH: 2,
-};
+import {PRIORITY_ENUM, STATUS_ENUM} from "@/enums.js"
 
 export default {
   components: {
@@ -86,14 +82,24 @@ export default {
   },
 
   computed: {
+    actualStatus:{
+      get(){
+        return this.item.status == STATUS_ENUM.NOT_DONE
+      },
+      set(value){
+        if(value){
+          this.item.status = STATUS_ENUM.NOT_DONE
+        }
+        else {
+          this.item.status = STATUS_ENUM.DONE
+        }
+      }
+    },
     through() {
-      return this.item.status ? "bg-gray-100 text-gray-400" : "";
+      return this.actualStatus ? "bg-gray-100 text-gray-400" : "";
     },
     throughTitle() {
-      return this.item.status ? "line-through" : "";
-    },
-    throughButton() {
-      return this.item.status;
+      return this.actualStatus ? "line-through" : "";
     },
     storeTodos() {
       const store = useTodoStore();
